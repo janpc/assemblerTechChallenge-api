@@ -54,8 +54,16 @@ async function getById(req, res, next) {
 }
 
 async function getAll(req, res, next) {
+  const { type } = req.params;
   try {
-    const response = await MemeRepo.getAll({});
+    let query = {};
+
+    if (type !== "all") {
+      query = {
+        type: type,
+      };
+    }
+    const response = await MemeRepo.getAll(query);
     if (response.error) {
       return res.status(400).send({
         data: null,
@@ -63,7 +71,7 @@ async function getAll(req, res, next) {
       });
     }
 
-    res.status(201).send({
+    res.status(200).send({
       data: response.data,
       error: null,
     });
